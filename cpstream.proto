@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+option go_package = "/cpstream";
+
+service ControlPlaneStream {
+  rpc Stream(stream ControlPlaneResponse) returns (stream ControlPlaneCommand);
+}
+
+message ControlPlaneCommand {
+  string uuid = 1;
+  oneof message {
+    ListInstancesCommand list_instances_cmd = 2;
+    CreateInstanceCommand create_instance_cmd = 3;
+  }
+}
+
+message ListInstancesCommand {}
+
+message CreateInstanceCommand {
+  string name = 1;
+  string package = 2;
+}
+
+message ControlPlaneResponse {
+  string uuid = 1;
+  oneof response {
+    string err = 2;
+    ListInstancesResponse list_instances_resp = 3;
+    CreateInstanceResponse create_instance_resp = 4;
+  }
+}
+
+message ListInstancesResponse {
+  repeated string instances = 1;
+}
+
+message CreateInstanceResponse {
+  string name = 1;
+}
